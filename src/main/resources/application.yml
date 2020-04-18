@@ -1,0 +1,35 @@
+server:
+  port: 8888
+
+# 忽略null值,配置@EnableWebMvc不生效，只能在实体头加@JsonInclude注解
+#spring:
+#  jackson:
+#    default-property-inclusion: non_null
+
+#spring:
+#  datasource:
+#    url: jdbc:mysql://127.0.0.1:3306/onef?useUnicode=true&characterEncoding=utf8&useSSL=false
+#    username: root
+#    password: Ff123456,./
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# mybatis
+#mybatis:
+#  type-aliases-package: com.lxf.onef.mapper
+#  configuration:
+#    map-underscore-to-camel-case: true
+#    cache-enabled: true
+#    default-statement-timeout: 3000
+#    use-generated-keys: true
+
+spring:
+  mvc:
+    view:
+      suffix: .html
+      prefix: /
+
+jwt-salt: HJIhkjKHkjJIHiugUYGyfYfyGuihIJJpoJ0oKPOJL
+
+snow-flake:
+  data-center-id: 2
+  machine-id: 5
