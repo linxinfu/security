@@ -6,27 +6,26 @@ server:
 #  jackson:
 #    default-property-inclusion: non_null
 
-#spring:
-#  datasource:
-#    url: jdbc:mysql://127.0.0.1:3306/onef?useUnicode=true&characterEncoding=utf8&useSSL=false
-#    username: root
-#    password: Ff123456,./
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-
-# mybatis
-#mybatis:
-#  type-aliases-package: com.lxf.onef.mapper
-#  configuration:
-#    map-underscore-to-camel-case: true
-#    cache-enabled: true
-#    default-statement-timeout: 3000
-#    use-generated-keys: true
-
 spring:
   mvc:
     view:
       suffix: .html
       prefix: /
+
+  datasource:
+    url: jdbc:sqlite:/Users/linxinfu/Documents/github/security/src/main/db/security.db
+    username:
+    password:
+    driver-class-name: org.sqlite.JDBC
+
+mybatis:
+  type-aliases-package: com.lxf.security.mapper
+  mapper-locations: classpath:mapper/*.xml # 有xml映射文件必须指定位置
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+    default-statement-timeout: 3000
+    use-generated-keys: true
 
 jwt-salt: HJIhkjKHkjJIHiugUYGyfYfyGuihIJJpoJ0oKPOJL
 

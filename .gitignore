@@ -32,3 +32,4 @@ build/
 /.mvn/
 /mvnw.cmd
 /mvnw
+/src/main/java/com/lxf/security/generator/

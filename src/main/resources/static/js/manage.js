@@ -1,36 +1,7 @@
-var updateThis; //更新按钮指定的this
-
-const request = (url, config) => {
-    return fetch(url, config).then((res) => {
-        if (res.ok) {
-            return res.json()
-        } else {
-            throw Error('服务器请求异常')
-        }
-    }).then((resJson) => {
-        return resJson
-    }).catch((error) => {
-        console.error(error)
-    })
-};
-
-const get = (url) => {
-    return request(url, {method: 'GET'})
-};
-
-const post = (url, config) => {
-    return request(url, {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json'
-        },
-        body: JSON.stringify(config)
-    })
-};
+let updateThis; //更新按钮指定的this
 
 /* 左侧菜单选择事件 */
 $(".sidebar-menu li").click(function () {
-    console.log("大石街道")
     $(".sidebar-menu li").removeClass("active");
     $(this).addClass("active");
     $("#tables-section").hide();
@@ -40,49 +11,38 @@ $(".sidebar-menu li").click(function () {
     $("#" + $(this).attr("data-section")).show();
 });
 
-/* 获取所有待选人信息 */
-function getInformation() {
-    let a = get("hello");
-    console.log("大家啊四等奖假数据爱神的箭 ");
-    console.log(a);
-    $.ajax({
-        url: 'MainServlet/selectAllUser',
-        dataType: 'json',
-        success: function (data) {
-            // 判断返回的数据是否为空
-            if (JSON.stringify(data) === '[]') {
-                console.log("返回的待选人信息数据为空");
-                return 0;
-            } else {
-                // 遍历json将待选人填入表中
-                for (let i in data[0].list) {
-                    $("#information").append(`
+/* 获取所有密码信息 */
+
+function showKeysInfo() {
+    let keys = getAllKeys();
+    keys.then(resp => {
+        resp.data.forEach(v => {
+            console.log(v);
+            $("#information").append(`
                       <tr>
-                        <td class=\"table-user-id\">` + data[0].list[i].id + `</td>
-                        <td class=\"table-user-name\">` + data[0].list[i].name + `</td>
-                        <td class=\"table-user-group\">` + data[0].list[i].group + `</td>               
+                        <td class=\"table-key-id\">` + v.id + `</td>
+                        <td class=\"table-key-name\">` + v.name + `</td>
+                        <td class=\"table-key-password\">` + v.password + `</td>
+                        <td class=\"table-key-level\">` + v.level + `</td>
+                        <td class=\"table-key-remark\">` + v.remark + `</td>
+                        <td class=\"table-key-create-time\">` + v.create_at + `</td>
                         <td>
-                         <button class=\"btn btn-danger btn-sm update-user \">update</button>&nbsp;&nbsp;
-                         <button class=\"btn btn-danger btn-sm delete-user \">delete</button>
+                         <button class=\"btn btn-primary btn-sm update-key \">update</button>&nbsp;&nbsp;
+                         <button class=\"btn btn-danger btn-sm delete-key \">delete</button>
                         </td>
                       </tr>
                     `);
-                }
-            }
-        },
-        error: function (data) {
-            console.log("待选人信息请求失败！");
-        }
+        });
     });
 }
 
 /* 从从信息表中删除人 */
-$(document).on("click", ".delete-user", function () {
+$(document).on("click", ".delete-key", function () {
     // 绑定this对象
     var that = this;
     // 存储传输的用户id
     var myData = {
-        id: parseInt($(that).parent().prevAll(".table-user-id").html())
+        id: parseInt($(that).parent().prevAll(".table-key-id").html())
     };
     //询问是否确认删除
     layer.confirm('确认删除该人？', {
@@ -94,7 +54,7 @@ $(document).on("click", ".delete-user", function () {
         /**  test end */
         //向后端传输数据
         $.ajax({
-            url: 'MainServlet/deleteUser',
+            url: 'MainServlet/deletekey',
             dataType: 'json',
             data: myData,
             success: function (data) {
@@ -114,29 +74,29 @@ $(document).on("click", ".delete-user", function () {
 });
 
 /* 从从信息表中修改信息 */
-$(document).on("click", ".update-user", function () {
+$(document).on("click", ".update-key", function () {
     // 绑定this对象
     var that = this;
     //绑定全局this
     updateThis = this;
     // 将需要修改人的信息传给模态框
-    $("#update-user-id").val($(that).parent().prevAll(".table-user-id").html());
-    $("#update-user-group").val($(that).parent().prevAll(".table-user-group").html());
-    $("#update-user-name").val($(that).parent().prevAll(".table-user-name").html());
+    $("#update-key-id").val($(that).parent().prevAll(".table-key-id").html());
+    $("#update-key-group").val($(that).parent().prevAll(".table-key-group").html());
+    $("#update-key-name").val($(that).parent().prevAll(".table-key-name").html());
     $("#myModal").modal('show');
 });
 
 /* 确认修改待选人信息 */
-$("#update-user-btn").click(function () {
+$("#update-key-btn").click(function () {
     $("#myModal").modal('hide');
     let updateData = {
-        id: $("#update-user-id").val(),
-        group: $("#update-user-group").val(),
-        name: $("#update-user-name").val()
+        id: $("#update-key-id").val(),
+        group: $("#update-key-group").val(),
+        name: $("#update-key-name").val()
     };
     // 将信息传给后台
     $.ajax({
-        url: 'MainServlet/updateUser',
+        url: 'MainServlet/updatekey',
         type: "post",
         dataType: 'json',
         data: updateData,
@@ -147,8 +107,8 @@ $("#update-user-btn").click(function () {
             //  getInformation();
 
             // 前端更新修改后的数据: 姓名和组号
-            $(updateThis).parent().prevAll(".table-user-name").html($("#update-user-name").val());
-            $(updateThis).parent().prevAll(".table-user-group").html($("#update-user-group").val());
+            $(updateThis).parent().prevAll(".table-key-name").html($("#update-key-name").val());
+            $(updateThis).parent().prevAll(".table-key-group").html($("#update-key-group").val());
         },
         error: function () {
             console.log("修改待选人信息请求发送失败！");
@@ -276,7 +236,7 @@ $("#reset-number-btn").click(function () {
 
 
 $(function () {
-    getInformation();
+    showKeysInfo();
     showFrequency();
 
     /* 条形图窗口变化时重绘 */

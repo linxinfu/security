@@ -83,8 +83,8 @@
                         <div class="panel-body table-responsive">
                             <div class="box-tools m-b-15">
                                 <div class="input-group">
-                                    <form action="MainServlet/exportExcel">
-                                        <input type="submit" class="btn btn-info btn-sm" id="report-btn" value="导出">
+                                    <form action="/export_excel">
+                                        <input type="submit" class="btn btn-info btn-sm" id="report-btn" value="导出报表">
                                     </form>
                                 </div>
                             </div>
@@ -92,9 +92,12 @@
                                 <tbody id="information">
                                 <tr>
                                     <th>ID</th>
-                                    <th>User</th>
-                                    <th>Group</th>
-                                    <th>Action</th>
+                                    <th>名称</th>
+                                    <th>密码</th>
+                                    <th>强度</th>
+                                    <th>备注</th>
+                                    <th>创建时间</th>
+                                    <th>操作</th>
                                 </tr>
                                 </tbody>
                             </table>
@@ -215,6 +218,7 @@
 <script src="js/layui/layui.all.js" type="text/javascript"></script>
 <!-- echarts.js -->
 <script src="js/echarts.min.js" type="text/javascript"></script>
+<script src="js/request.js" type="text/javascript"></script>
 <!-- manage.js -->
 <script src="js/manage.js" type="text/javascript"></script>
 </body>

@@ -1,6 +1,8 @@
 package com.lxf.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.sql.Timestamp;
 
@@ -17,8 +19,11 @@ public class Key {
     private Boolean isValid;
     private String level;
     private String password;
-    private Timestamp createAt;
-    private Timestamp updateAt;
+    private String remark;
+    @JsonProperty("create_at")
+    private String createAt;
+    @JsonProperty("update_at")
+    private String updateAt;
 
     public Long getId() {
         return id;
@@ -36,6 +41,7 @@ public class Key {
         this.name = name;
     }
 
+    @JsonIgnore
     public Boolean getValid() {
         return isValid;
     }
@@ -60,19 +66,41 @@ public class Key {
         this.password = password;
     }
 
-    public Timestamp getCreateAt() {
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(Timestamp createAt) {
+    public void setCreateAt(String createAt) {
         this.createAt = createAt;
     }
 
-    public Timestamp getUpdateAt() {
+    public String getUpdateAt() {
         return updateAt;
     }
 
-    public void setUpdateAt(Timestamp updateAt) {
+    public void setUpdateAt(String updateAt) {
         this.updateAt = updateAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Key{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", isValid=" + isValid +
+                ", level='" + level + '\'' +
+                ", password='" + password + '\'' +
+                ", remark='" + remark + '\'' +
+                ", createAt=" + createAt +
+                ", updateAt=" + updateAt +
+                '}';
     }
 }
