@@ -13,7 +13,7 @@ spring:
       prefix: /
 
   datasource:
-    url: jdbc:sqlite:/Users/linxinfu/Documents/github/security/src/main/db/security.db
+    url: jdbc:sqlite:src/main/resources/db/security.db
     username:
     password:
     driver-class-name: org.sqlite.JDBC
