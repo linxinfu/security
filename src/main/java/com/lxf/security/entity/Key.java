@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.sql.Timestamp;
-
 /**
  * Created by lxf.
  * Description:
@@ -18,6 +16,7 @@ public class Key {
     private String name;
     private Boolean isValid;
     private String level;
+    private String account;
     private String password;
     private String remark;
     @JsonProperty("create_at")
@@ -41,7 +40,6 @@ public class Key {
         this.name = name;
     }
 
-    @JsonIgnore
     public Boolean getValid() {
         return isValid;
     }
@@ -56,6 +54,14 @@ public class Key {
 
     public void setLevel(String level) {
         this.level = level;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public String getPassword() {
@@ -97,10 +103,11 @@ public class Key {
                 ", name='" + name + '\'' +
                 ", isValid=" + isValid +
                 ", level='" + level + '\'' +
+                ", account='" + account + '\'' +
                 ", password='" + password + '\'' +
                 ", remark='" + remark + '\'' +
-                ", createAt=" + createAt +
-                ", updateAt=" + updateAt +
+                ", createAt='" + createAt + '\'' +
+                ", updateAt='" + updateAt + '\'' +
                 '}';
     }
 }

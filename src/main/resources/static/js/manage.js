@@ -11,17 +11,16 @@ $(".sidebar-menu li").click(function () {
     $("#" + $(this).attr("data-section")).show();
 });
 
-/* 获取所有密码信息 */
-
-function showKeysInfo() {
-    let keys = getAllKeys();
+/* 展示密码信息 */
+const showKeysInfo = () => {
+    let keys = getAllKeysReq();
     keys.then(resp => {
         resp.data.forEach(v => {
-            console.log(v);
             $("#information").append(`
                       <tr>
                         <td class=\"table-key-id\">` + v.id + `</td>
                         <td class=\"table-key-name\">` + v.name + `</td>
+                        <td class=\"table-key-account\">` + v.account + `</td>
                         <td class=\"table-key-password\">` + v.password + `</td>
                         <td class=\"table-key-level\">` + v.level + `</td>
                         <td class=\"table-key-remark\">` + v.remark + `</td>
@@ -34,8 +33,28 @@ function showKeysInfo() {
                     `);
         });
     });
-}
+};
 
+const showAddKeyModal = () => {
+    $("#addKeyModal").modal('show');
+};
+const hideAddKeyModal = () => {
+    $("#addKeyModal").modal('hide');
+};
+
+// 增加密码
+const addKey = () => {
+    let reqConfig = {
+        "name": "测试请求",
+        "level": "high",
+        "password": "32342",
+        "remark": "3423"
+    };
+    let res = addKeyReq(reqConfig)
+    res.then(json => {
+        console.log(json)
+    })
+};
 /* 从从信息表中删除人 */
 $(document).on("click", ".delete-key", function () {
     // 绑定this对象
@@ -73,7 +92,7 @@ $(document).on("click", ".delete-key", function () {
     });
 });
 
-/* 从从信息表中修改信息 */
+/* 从信息表中修改信息 */
 $(document).on("click", ".update-key", function () {
     // 绑定this对象
     var that = this;

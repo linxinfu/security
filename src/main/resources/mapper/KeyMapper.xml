@@ -7,12 +7,13 @@
         <result column="IS_VALID" property="isValid" jdbcType="INTEGER"/>
         <result column="LEVEL" property="level" jdbcType="VARCHAR"/>
         <result column="PASSWORD" property="password" jdbcType="VARCHAR"/>
+        <result column="ACCOUNT" property="account" jdbcType="VARCHAR"/>
         <result column="CREATE_AT" property="createAt" jdbcType="VARCHAR"/>
         <result column="UPDATE_AT" property="updateAt" jdbcType="VARCHAR"/>
         <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-        ID, NAME, IS_VALID, LEVEL, PASSWORD, CREATE_AT, UPDATE_AT, REMARK
+        ID, NAME, IS_VALID, LEVEL,ACCOUNT, PASSWORD, CREATE_AT, UPDATE_AT, REMARK
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -33,10 +34,10 @@
     </delete>
     <insert id="insert" parameterType="com.lxf.security.entity.Key">
         insert into KEY (ID, NAME, IS_VALID,
-                         LEVEL, PASSWORD, CREATE_AT,
+                         LEVEL,ACCOUNT, PASSWORD, CREATE_AT,
                          UPDATE_AT, REMARK)
         values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{isValid,jdbcType=INTEGER},
-                #{level,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{createAt,jdbcType=VARCHAR},
+                #{level,jdbcType=VARCHAR},#{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{createAt,jdbcType=VARCHAR},
                 #{updateAt,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.lxf.security.entity.Key">
@@ -53,6 +54,9 @@
             </if>
             <if test="level != null">
                 LEVEL,
+            </if>
+            <if test="account != null">
+                ACCOUNT,
             </if>
             <if test="password != null">
                 PASSWORD,
@@ -80,6 +84,9 @@
             <if test="level != null">
                 #{level,jdbcType=VARCHAR},
             </if>
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
             <if test="password != null">
                 #{password,jdbcType=VARCHAR},
             </if>
@@ -106,6 +113,9 @@
             <if test="level != null">
                 LEVEL = #{level,jdbcType=VARCHAR},
             </if>
+            <if test="account != null">
+                ACCOUNT = #{account,jdbcType=VARCHAR},
+            </if>
             <if test="password != null">
                 PASSWORD = #{password,jdbcType=VARCHAR},
             </if>
@@ -126,6 +136,7 @@
         set NAME      = #{name,jdbcType=VARCHAR},
             IS_VALID  = #{isValid,jdbcType=INTEGER},
             LEVEL     = #{level,jdbcType=VARCHAR},
+            ACCOUNT   = #{account,jdbcType=VARCHAR},
             PASSWORD  = #{password,jdbcType=VARCHAR},
             CREATE_AT = #{createAt,jdbcType=VARCHAR},
             UPDATE_AT = #{updateAt,jdbcType=VARCHAR},

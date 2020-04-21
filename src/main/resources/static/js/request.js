@@ -26,6 +26,10 @@ const post = (url, config) => {
     })
 };
 
-async function getAllKeys() {
+const getAllKeysReq = () => {
     return get("/api/v1/key/get_all")
-}
+};
+
+const addKeyReq = (config) => {
+    return post("/api/v1/key/add", config)
+};
