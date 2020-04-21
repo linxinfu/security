@@ -15,9 +15,11 @@ $(".sidebar-menu li").click(function () {
 const showKeysInfo = () => {
     let keys = getAllKeysReq();
     keys.then(resp => {
-        resp.data.forEach(v => {
-            $("#information").append(`
-                      <tr>
+        if (resp.status === 1) {
+            $("#information").find(".key-item").remove();
+            resp.data.forEach(v => {
+                $("#information").append(`
+                      <tr class=\"key-item\">
                         <td class=\"table-key-id\">` + v.id + `</td>
                         <td class=\"table-key-name\">` + v.name + `</td>
                         <td class=\"table-key-account\">` + v.account + `</td>
@@ -26,70 +28,84 @@ const showKeysInfo = () => {
                         <td class=\"table-key-remark\">` + v.remark + `</td>
                         <td class=\"table-key-create-time\">` + v.create_at + `</td>
                         <td>
-                         <button class=\"btn btn-primary btn-sm update-key \">update</button>&nbsp;&nbsp;
-                         <button class=\"btn btn-danger btn-sm delete-key \">delete</button>
+                            <button class="btn btn-primary btn-sm view-key"><i class="fa fa-eye"></i></button>&nbsp;
+                            <button class="btn btn-primary btn-sm update-key"><i class="fa fa-pencil-square-o"></i></button>&nbsp;
+                            <button class="btn btn-danger btn-sm delete-key"><i class="fa fa-trash-o"></i></button>
                         </td>
                       </tr>
                     `);
-        });
+            });
+        } else {
+            console.log("获取密码信息失败")
+        }
     });
 };
 
 // 增加密码
 const addKey = () => {
+    let password = $("#add-key-pwd").val();
+    let encryptKey = $("#add-key-primary-key").val();
+    let encryptedPwd = aesEncrypt(password, encryptKey);
     let reqConfig = {
-        "name": "测试请求",
-        "level": "high",
-        "password": "32342",
-        "remark": "3423"
+        name: $("#add-key-name").val(),
+        level: checkPassWord(password),
+        account: $("#add-key-account").val(),
+        password: encryptedPwd,
+        remark: $("#add-key-remark").val()
     };
+
     let res = addKeyReq(reqConfig);
     res.then(json => {
+        $("#addKeyModal").modal('hide');
         if (json.status === 1) {
-
+            layer.msg('新增成功', {icon: 1, time: 1000});
+            showKeysInfo()
         } else {
-
+            layer.msg('新增失败', {icon: 2, time: 1000});
         }
-        console.log(json)
+    }, json => {
+        $("#addKeyModal").modal('hide');
+        console.error(json)
+        layer.msg('新增失败', {icon: 2, time: 1000});
     })
 };
-/* 从从信息表中删除人 */
+
+/* 删除密码 */
 $(document).on("click", ".delete-key", function () {
     // 绑定this对象
-    var that = this;
-    // 存储传输的用户id
-    var myData = {
-        id: parseInt($(that).parent().prevAll(".table-key-id").html())
-    };
-    //询问是否确认删除
-    layer.confirm('确认删除该人？', {
+    let that = this;
+    let keyId = $(that).parents().prevAll(".table-key-id").html()
+    layer.confirm('删除不可撤回，确认删除？', {
         btn: ['确定', '取消']
-    }, function () {
-        /** test */
-        $(that).parent().parent().remove();
-        layer.msg('删除成功', {icon: 1, time: 1000});
-        /**  test end */
-        //向后端传输数据
-        $.ajax({
-            url: 'MainServlet/deletekey',
-            dataType: 'json',
-            data: myData,
-            success: function (data) {
-                if (data[0].isDelete) {
-                    // 将人从页面删除
-                    $(that).parent().parent().remove();
-                    layer.msg('删除成功', {icon: 1, time: 1000});
-                } else {
-                    layer.msg('删除失败', {icon: 2, time: 1000});
-                }
-            },
-            error: function () {
-                console.log("删除待选人请求发送失败！");
+    }, () => {
+        let resp = deleteKeyReq(keyId)
+        resp.then(respJson => {
+            if (respJson.status === 1) {
+                $(that).parent().parent().remove();
+                layer.msg('删除成功', {icon: 1, time: 1000});
             }
-        });
+        }, respJson => {
+            layer.msg(`删除失败,${respJson.msg}`, {icon: 2, time: 1000});
+        })
     });
 });
 
+$(document).on("click", ".view-key", function() {
+    let encryptedPwd = $(this).parent().prevAll(".table-key-password").html()
+    console.log(encryptedPwd)
+    layer.prompt({title: '输入主密钥', formType: 1}, function (msg, index) {
+        try {
+            let password = aesDecrypt(encryptedPwd, msg)
+            layer.msg(`成功,${password}`, {icon: 1, time: 8000});
+        } catch (err) {
+            console.log(err)
+            layer.msg(`删除失败`, {icon: 2, time: 8000});
+        }
+
+        // layer.close(index);
+
+    });
+})
 /* 从信息表中修改信息 */
 $(document).on("click", ".update-key", function () {
     // 绑定this对象

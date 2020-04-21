@@ -1,23 +1,30 @@
 // AES加密
-const encrypt = (data, aesKey) => {
+const aesEncrypt = (data, aesKey) => {
     let key = CryptoJS.enc.Utf8.parse(aesKey);//将秘钥转换成Utf8字节数组
-    let encryptedData =   CryptoJS.AES.encrypt(JSON.stringify(data), key, {
+    console.log("加密使用" + key)
+    let encryptedData = CryptoJS.AES.encrypt(data.toString(), key, {
         iv: CryptoJS.enc.Utf8.parse(aesKey.substr(0, 16)),
         mode: CryptoJS.mode.CBC,
         padding: CryptoJS.pad.Pkcs7
     });
+    console.log("加密出来的字符串"+ encryptedData.toString())
     return encryptedData.toString();
 };
 
 // AES解密
-const decrypt = (data, aesKey) => {
+const aesDecrypt = (data, aesKey) => {
+    console.log("解密的字符串"+data)
     let key = CryptoJS.enc.Utf8.parse(aesKey);//将秘钥转换成Utf8字节数组
-    CryptoJS.AES.decrypt(data, key, {
+    console.log("解密使用" + key)
+    let repData = CryptoJS.AES.decrypt(data, key, {
         iv: CryptoJS.enc.Utf8.parse(aesKey.substr(0, 16)),
         mode: CryptoJS.mode.CBC,
         padding: CryptoJS.pad.Pkcs7
     });
-    return JSON.parse(decrypt.toString(CryptoJS.enc.Utf8));//解密后的数据
+    console.log(repData)
+    console.log(repData.toString())
+    console.log("解密出来的数据"+repData.toString(CryptoJS.enc.Utf8))
+    return repData.toString();//解密后的数据
 };
 
 // SHA256摘要
