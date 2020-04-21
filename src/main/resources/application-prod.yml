@@ -1,0 +1,36 @@
+server:
+  port: 8888
+
+# 忽略null值,配置@EnableWebMvc不生效，只能在实体头加@JsonInclude注解
+#spring:
+#  jackson:
+#    default-property-inclusion: non_null
+
+spring:
+  mvc:
+    view:
+      suffix: .html
+      prefix: /
+
+  datasource:
+    # 相对路径
+    url: jdbc:sqlite::resource:db/security.db
+    username:
+    password:
+    driver-class-name: org.sqlite.JDBC
+
+mybatis:
+  type-aliases-package: com.lxf.security.mapper
+  mapper-locations: classpath:mapper/*.xml # 有xml映射文件必须指定位置
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+    default-statement-timeout: 3000
+    use-generated-keys: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+jwt-salt: HJIhkjKHkjJIHiugUYGyfYfyGuihIJJpoJ0oKPOJL
+
+snow-flake:
+  data-center-id: 2
+  machine-id: 5

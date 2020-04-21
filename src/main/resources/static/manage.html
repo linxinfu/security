@@ -84,7 +84,7 @@
                             <div class="box-tools m-b-15">
                                 <div class="input-group">
                                     <input type="submit" class="btn btn-info btn-sm" id="report-btn" value="导出报表">&nbsp;&nbsp;
-                                    <input type="submit" class="btn btn-info btn-sm" onclick="showAddKeyModal()"
+                                    <input type="submit" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addKeyModal"
                                            value="新增密码">
                                 </div>
                             </div>
@@ -228,7 +228,7 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" onclick="hideAddKeyModal()" class="btn btn-default"
+                            <button type="button" class="btn btn-default"
                                     data-dismiss="modal">取消
                             </button>&nbsp;&nbsp;
                             <button type="button" class="btn btn-primary" onclick="addKey()">确认</button>
@@ -244,28 +244,18 @@
         </div>
     </aside>
 </div><!-- ./wrapper -->
-<!-- jQuery 2.0.2 -->
 <script src="js/jquery.min.js" type="text/javascript"></script>
-<!-- jQuery UI 1.10.3 -->
 <script src="js/jquery-ui-1.10.3.min.js" type="text/javascript"></script>
-<!-- Bootstrap -->
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
-<!-- daterangepicker -->
 <script src="js/plugins/daterangepicker/daterangepicker.js" type="text/javascript"></script>
 <script src="js/chart.js" type="text/javascript"></script>
 <script src="js/plugins/iCheck/icheck.min.js" type="text/javascript"></script>
-<!-- calendar -->
 <script src="js/plugins/fullcalendar/fullcalendar.js" type="text/javascript"></script>
-<!-- Director App -->
 <script src="js/Director/app.js" type="text/javascript"></script>
-<!-- Director dashboard demo (This is only for demo purposes) -->
 <script src="js/Director/dashboard.js" type="text/javascript"></script>
-<!-- layer.js -->
 <script src="js/layui/layui.all.js" type="text/javascript"></script>
-<!-- echarts.js -->
 <script src="js/echarts.min.js" type="text/javascript"></script>
 <script src="js/request.js" type="text/javascript"></script>
-<!-- manage.js -->
 <script src="js/manage.js" type="text/javascript"></script>
 <script src="js/aes.js" type="text/javascript"></script>
 <script src="js/utils.js" type="text/javascript"></script>

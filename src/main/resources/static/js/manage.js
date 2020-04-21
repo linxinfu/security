@@ -35,13 +35,6 @@ const showKeysInfo = () => {
     });
 };
 
-const showAddKeyModal = () => {
-    $("#addKeyModal").modal('show');
-};
-const hideAddKeyModal = () => {
-    $("#addKeyModal").modal('hide');
-};
-
 // 增加密码
 const addKey = () => {
     let reqConfig = {
@@ -50,8 +43,13 @@ const addKey = () => {
         "password": "32342",
         "remark": "3423"
     };
-    let res = addKeyReq(reqConfig)
+    let res = addKeyReq(reqConfig);
     res.then(json => {
+        if (json.status === 1) {
+
+        } else {
+
+        }
         console.log(json)
     })
 };
