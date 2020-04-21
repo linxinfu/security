@@ -27,7 +27,7 @@ mybatis:
     cache-enabled: true
     default-statement-timeout: 3000
     use-generated-keys: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 jwt-salt: HJIhkjKHkjJIHiugUYGyfYfyGuihIJJpoJ0oKPOJL
 

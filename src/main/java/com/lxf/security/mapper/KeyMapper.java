@@ -7,13 +7,13 @@ import java.util.List;
 
 @Repository
 public interface KeyMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(String id);
 
     int insert(Key record);
 
     int insertSelective(Key record);
 
-    Key selectByPrimaryKey(Integer id);
+    Key selectByPrimaryKey(String id);
 
     List<Key> selectAll();
 

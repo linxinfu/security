@@ -4,10 +4,7 @@ import com.lxf.security.entity.Key;
 import com.lxf.security.entity.ServerResponse;
 import com.lxf.security.service.KeyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,6 +34,12 @@ public class KeyController {
         System.out.println(key);
         boolean success = keyService.createKey(key);
         return success ? ServerResponse.success("新建成功") : ServerResponse.error("新建失败");
+    }
+
+    @PostMapping("/delete/{keyId}")
+    public ServerResponse<Boolean> delete(@PathVariable String keyId) {
+        boolean success = keyService.deleteKey(keyId);
+        return success ? ServerResponse.success("删除成功") : ServerResponse.error("删除失败");
     }
 
 }

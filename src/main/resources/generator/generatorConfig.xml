@@ -10,7 +10,7 @@
         </commentGenerator>
         <!-- 数据库连接信息 -->
         <jdbcConnection driverClass="org.sqlite.JDBC"
-                        connectionURL="jdbc:sqlite:/Users/linxinfu/Documents/github/security/src/main/db/security.db"
+                        connectionURL="jdbc:sqlite:src/main/resources/db/security.db"
                         userId=""
                         password="">
             <property name="nullCatalogMeansCurrent" value="true"/>

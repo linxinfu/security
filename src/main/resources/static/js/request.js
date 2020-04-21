@@ -27,9 +27,13 @@ const post = (url, config) => {
 };
 
 const getAllKeysReq = () => {
-    return get("/api/v1/key/get_all")
+    return get(`/api/v1/key/get_all`)
 };
 
 const addKeyReq = (config) => {
-    return post("/api/v1/key/add", config)
+    return post(`/api/v1/key/add`, config)
 };
+
+const deleteKeyReq = (keyId) => {
+    return post(`/api/v1/key/delete/${keyId}`, {})
+}

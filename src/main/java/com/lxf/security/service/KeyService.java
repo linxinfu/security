@@ -32,9 +32,14 @@ public class KeyService {
 
     public boolean createKey(Key key) {
         key.setValid(true);
-        key.setId(snowFlake.nextId());
+        key.setId(String.valueOf(snowFlake.nextId()));
         key.setCreateAt(Common.getCurrentTimeStr());
         return keyMapper.insert(key) == 1;
+    }
+
+    public boolean deleteKey(String keyId){
+        System.out.println(keyMapper.selectByPrimaryKey(keyId));
+        return keyMapper.deleteByPrimaryKey(keyId) == 1;
     }
 
 }
