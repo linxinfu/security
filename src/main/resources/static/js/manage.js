@@ -45,7 +45,7 @@ const showKeysInfo = () => {
 const addKey = () => {
     let password = $("#add-key-pwd").val();
     let encryptKey = $("#add-key-primary-key").val();
-    let encryptedPwd = aesEncrypt(password, encryptKey);
+    let encryptedPwd = AES_ECB_encrypt(password, sha256(encryptKey));
     let reqConfig = {
         name: $("#add-key-name").val(),
         level: checkPassWord(password),
@@ -65,7 +65,7 @@ const addKey = () => {
         }
     }, json => {
         $("#addKeyModal").modal('hide');
-        console.error(json)
+        console.error(json);
         layer.msg('新增失败', {icon: 2, time: 1000});
     })
 };
@@ -74,11 +74,11 @@ const addKey = () => {
 $(document).on("click", ".delete-key", function () {
     // 绑定this对象
     let that = this;
-    let keyId = $(that).parents().prevAll(".table-key-id").html()
+    let keyId = $(that).parents().prevAll(".table-key-id").html();
     layer.confirm('删除不可撤回，确认删除？', {
         btn: ['确定', '取消']
     }, () => {
-        let resp = deleteKeyReq(keyId)
+        let resp = deleteKeyReq(keyId);
         resp.then(respJson => {
             if (respJson.status === 1) {
                 $(that).parent().parent().remove();
@@ -90,22 +90,54 @@ $(document).on("click", ".delete-key", function () {
     });
 });
 
-$(document).on("click", ".view-key", function() {
-    let encryptedPwd = $(this).parent().prevAll(".table-key-password").html()
-    console.log(encryptedPwd)
-    layer.prompt({title: '输入主密钥', formType: 1}, function (msg, index) {
+$(document).on("click", ".view-key", function () {
+    let that = this;
+    let encryptedPwd = $(that).parent().prevAll(".table-key-password").html();
+    layer.prompt({title: '输入主密钥', formType: 1}, function (inputKey, index) {
         try {
-            let password = aesDecrypt(encryptedPwd, msg)
-            layer.msg(`成功,${password}`, {icon: 1, time: 8000});
+            let password = AES_ECB_decrypt(encryptedPwd, sha256(inputKey));
+            if (password !== "") {
+                layer.close(index);
+                layer.open({
+                    type: 1,
+                    title: false, // 不显示标题栏
+                    closeBtn: false,
+                    area: '300px;',
+                    shade: 0.8,
+                    id: 'show_password', // 设定一个id，防止重复弹出
+                    btn: ['复制', "取消"],
+                    btnAlign: 'c',
+                    moveType: 1, // 拖拽模式，0或者1
+                    content: `<div style="padding: 50px; line-height: 22px; 
+                                   background-color: #393D49; font-size: large;
+                                   text-align: center; color: #fff; font-weight: 300;">${password}</div>`,
+                    success: function (layerElem) {
+                        let btn = layerElem.find('.layui-layer-btn');
+                        btn.find('.layui-layer-btn0').attr("id", "show-decrypted-password");
+                        let clipboard = new ClipboardJS('#show-decrypted-password', {
+                            text: function () {
+                                return password;
+                            }
+                        });
+                        clipboard.on('success', function (e) {
+                            layer.msg('密码已复制到剪贴板', {icon: 1, time: 1000});
+                        });
+
+                        clipboard.on('error', function (e) {
+                            layer.msg(`复制失败`, {icon: 2, time: 1000});
+                        });
+                    }
+                });
+            } else {
+                throw Error;
+            }
         } catch (err) {
-            console.log(err)
-            layer.msg(`删除失败`, {icon: 2, time: 8000});
+            console.log(err);
+            layer.msg(`解密失败，可能主密码有误`, {icon: 2, time: 1000});
         }
-
-        // layer.close(index);
-
     });
-})
+});
+
 /* 从信息表中修改信息 */
 $(document).on("click", ".update-key", function () {
     // 绑定this对象

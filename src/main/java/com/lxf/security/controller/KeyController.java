@@ -3,7 +3,6 @@ package com.lxf.security.controller;
 import com.lxf.security.entity.Key;
 import com.lxf.security.entity.ServerResponse;
 import com.lxf.security.service.KeyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

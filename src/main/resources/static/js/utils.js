@@ -1,37 +1,28 @@
 // AES加密
-const aesEncrypt = (data, aesKey) => {
-    let key = CryptoJS.enc.Utf8.parse(aesKey);//将秘钥转换成Utf8字节数组
-    console.log("加密使用" + key)
-    let encryptedData = CryptoJS.AES.encrypt(data.toString(), key, {
-        iv: CryptoJS.enc.Utf8.parse(aesKey.substr(0, 16)),
-        mode: CryptoJS.mode.CBC,
+const AES_ECB_encrypt = (message, key) => {
+    let keyHex = CryptoJS.enc.Utf8.parse(key);
+    let messageHex = CryptoJS.enc.Utf8.parse(message);
+    let encrypted = CryptoJS.AES.encrypt(messageHex, keyHex, {
+        mode: CryptoJS.mode.ECB,
         padding: CryptoJS.pad.Pkcs7
     });
-    console.log("加密出来的字符串"+ encryptedData.toString())
-    return encryptedData.toString();
+    return encrypted.toString();// base64结果
 };
 
 // AES解密
-const aesDecrypt = (data, aesKey) => {
-    console.log("解密的字符串"+data)
-    let key = CryptoJS.enc.Utf8.parse(aesKey);//将秘钥转换成Utf8字节数组
-    console.log("解密使用" + key)
-    let repData = CryptoJS.AES.decrypt(data, key, {
-        iv: CryptoJS.enc.Utf8.parse(aesKey.substr(0, 16)),
-        mode: CryptoJS.mode.CBC,
+const AES_ECB_decrypt = (messageBase64, key) => {
+    let keyHex = CryptoJS.enc.Utf8.parse(key);
+    let decrypt = CryptoJS.AES.decrypt(messageBase64, keyHex, {
+        mode: CryptoJS.mode.ECB,
         padding: CryptoJS.pad.Pkcs7
     });
-    console.log(repData)
-    console.log(repData.toString())
-    console.log("解密出来的数据"+repData.toString(CryptoJS.enc.Utf8))
-    return repData.toString();//解密后的数据
+    let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
+    return decryptedStr.toString();
 };
 
 // SHA256摘要
-const SHA256 = (msg) => {
-    let hash = sha256.create();
-    hash.update(msg);
-    return hash.hex();
+const sha256 = (message) => {
+    return CryptoJS.SHA256(message).toString();
 };
 
 // 校验密码级别

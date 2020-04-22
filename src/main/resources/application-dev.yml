@@ -32,6 +32,8 @@ mybatis:
 
 jwt-salt: HJIhkjKHkjJIHiugUYGyfYfyGuihIJJpoJ0oKPOJL
 
+database-file-path: src/main/resources/db/security.db
+
 snow-flake:
   data-center-id: 2
   machine-id: 5

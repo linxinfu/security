@@ -20,82 +20,14 @@
     <link href="css/manage.css" rel="stylesheet" type="text/css">
 </head>
 <body class="skin-black">
-
-
-<td>
-    <button class="btn btn-primary btn-sm view-key"><i class="fa fa-eye"></i></button>&nbsp;
-    <button class="btn btn-primary btn-sm update-key"><i class="fa fa-pencil-square-o"></i></button>&nbsp;
-    <button class="btn btn-danger btn-sm delete-key"><i class="fa fa-trash-o"></i></button>
-    <button class="btn btn-danger btn-sm delete-key">删除</i></button>
-</td>
-
-
-
-<h1>测试页面</h1>
 <!-- jQuery 2.0.2 -->
 <script src="js/jquery.min.js" type="text/javascript"></script>
-<script src="js/aes.js" type="text/javascript"></script>
 <!-- jQuery UI 1.10.3 -->
 <script src="js/jquery-ui-1.10.3.min.js" type="text/javascript"></script>
+<script src="js/crypto-js.min.js" type="text/javascript"></script>
 <script>
-    const request = (url, config) => {
-        return fetch(url, config).then((res) => {
-            if (res.ok) {
-                return res.json()
-            } else {
-                throw Error('服务器请求异常')
-            }
-        }).catch((error) => {
-            console.error(error)
-        })
-    };
-
-    const get = (url) => {
-        return request(url, {method: 'GET'})
-    };
-
-    const post = (url, config) => {
-        return request(url, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(config)
-        })
-    };
-
-    async function testFetch() {
-        let rep = await get("api/hello");
-        console.log(rep)
-        // await rep.then(json => {
-        //     console.log(rep);
-        // });
-    }
-
     $(function () {
-        testFetch();
-        let aesKey = '1234567890123456789012335475';//秘钥
-        let key = CryptoJS.enc.Utf8.parse(aesKey);//将秘钥转换成Utf8字节数组
-        let data1 = "你是的是fsfdd多少";
 
-//加密
-        let encrypt = CryptoJS.AES.encrypt(JSON.stringify(data1), key, {
-            iv: CryptoJS.enc.Utf8.parse(aesKey.substr(0, 16)),
-            mode: CryptoJS.mode.CBC,
-            padding: CryptoJS.pad.Pkcs7
-        });
-        let data2 = encrypt.toString();//加密后的数据
-        console.log("加密后的数据", data2);
-
-//解密
-
-        let decrypt = CryptoJS.AES.decrypt(data2, key, {
-            iv: CryptoJS.enc.Utf8.parse(aesKey.substr(0, 16)),
-            mode: CryptoJS.mode.CBC,
-            padding: CryptoJS.pad.Pkcs7
-        });
-        let data3 = JSON.parse(decrypt.toString(CryptoJS.enc.Utf8));//解密后的数据
-        console.log("解密后的数据", data3);
     });
 </script>
 </body>

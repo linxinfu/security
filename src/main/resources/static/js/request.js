@@ -36,4 +36,4 @@ const addKeyReq = (config) => {
 
 const deleteKeyReq = (keyId) => {
     return post(`/api/v1/key/delete/${keyId}`, {})
-}
+};
