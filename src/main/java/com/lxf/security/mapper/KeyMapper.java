@@ -1,6 +1,7 @@
 package com.lxf.security.mapper;
 
 import com.lxf.security.entity.Key;
+import com.lxf.security.entity.LevelStatistic;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface KeyMapper {
     int updateByPrimaryKeySelective(Key record);
 
     int updateByPrimaryKey(Key record);
+
+    List<LevelStatistic> levelStatistic();
 }

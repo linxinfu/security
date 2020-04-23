@@ -5,8 +5,9 @@
     <title>后台管理</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <meta name="description" content="Developed By LXF">
-    <meta name="keywords" content="Admin, Bootstrap 3, Template, Theme, Responsive">
+    <meta name="keywords" content="Admin, Bootstrap3, Security">
 
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon"/>
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <link href="css/ionicons.min.css" rel="stylesheet" type="text/css"/>
@@ -54,17 +55,17 @@
             <ul class="sidebar-menu" id="sidebar-menu">
                 <li id="tables-select" data-section="tables-section" class="active">
                     <a href="javascript:void(0)">
-                        <i class="fa fa-glass"></i> <span>总览</span>
+                        <i class="fa fa-home"></i> <span>总览</span>
                     </a>
                 </li>
-                <li id="administrate-select" data-section="administrate-section">
+                <li id="manage-select" data-section="manage-section">
                     <a href="javascript:void(0)">
-                        <i class="fa fa-dashboard"></i> <span>管理</span>
+                        <i class="fa fa-cogs"></i> <span>管理</span>
                     </a>
                 </li>
-                <li id="settings-select" data-section="settings-section">
+                <li id="statistics-select" data-section="statistics-section" onclick="statisticsAll()">
                     <a href="javascript:void(0)">
-                        <i class="fa fa-gavel"></i> <span>统计</span>
+                        <i class="fa fa-bar-chart-o"></i> <span>统计</span>
                     </a>
                 </li>
             </ul>
@@ -112,8 +113,8 @@
                 </div>
             </div>
         </section><!-- /. Section tables -->
-        <!-- Section  administrate -->
-        <section class="content" id="administrate-section" style="display: none;">
+        <!-- Section  manage -->
+        <section class="content" id="manage-section" style="display: none;">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
                     <section class="panel">
@@ -146,24 +147,21 @@
                     </section>
                 </div>
             </div>
-        </section><!-- /. Section  administrate -->
-        <!-- Section Settings -->
-        <section class="content" id="settings-section" style="display: none;">
+        </section><!-- /. Section  manage -->
+
+        <!-- Section statistics -->
+        <section class="content" id="statistics-section" style="display: none;padding-top: 100px">
             <div class="row">
-                <div class="col-lg-1 col-lg-offset-10 col-md-1 col-md-offset-10">
-                    <button class="btn btn-sm btn-info" id="reset-number-btn">清空</button>
+                <div class="col-lg-5 col-md-5 col-lg-offset-1 col-md-offset-1">
+                    <div id="level-statistics" style="height: 480px;width: 100%"></div>
+                </div>
+                <div class="col-lg-5 col-md-5">
+                    <div id="safe-analysis" style="height: 480px;width: 100%"></div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-10 col-md-10 col-lg-offset-1 col-md-offset-1">
-                    <div id="frequencyChart" style="height: 480px;width: 800px">
+        </section><!-- /. Section  statistics -->
 
-                    </div>
-                </div>
-            </div>
-        </section><!-- /. Section  Settings -->
-
-        <!-- 修改个人信息模态对话框 -->
+        <!-- 修改信息模态对话框 -->
         <section>
             <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
                 <div class="modal-dialog" role="document">
@@ -171,27 +169,36 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                     aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">修改待选人信息</h4>
+                            <h4 class="modal-title">修改信息</h4>
                         </div>
                         <div class="modal-body">
                             <form role="form">
                                 <div class="form-group">
-                                    <label for="update-user-id">名称 :</label>
-                                    <input type="email" class="form-control" id="update-user-id" disabled="disabled">
+                                    <label for="update-key-id">ID :</label>
+                                    <input type="email" class="form-control" id="update-key-id" disabled="disabled">
                                 </div>
                                 <div class="form-group">
-                                    <label for="update-user-group">组号 ：</label>
-                                    <input type="text" class="form-control" id="update-user-group">
+                                    <label for="update-key-name">名称 ：</label>
+                                    <input type="text" class="form-control" id="update-key-name">
                                 </div>
                                 <div class="form-group">
-                                    <label for="update-user-name">姓名 ：</label>
-                                    <input type="text" class="form-control" id="update-user-name">
+                                    <label for="update-key-account">账号 ：</label>
+                                    <input type="text" class="form-control" id="update-key-account" disabled="disabled">
+                                </div>
+                                <div class="form-group">
+                                    <label for="update-key-password">密码 ：</label>
+                                    <input type="text" class="form-control" id="update-key-password"
+                                           disabled="disabled">
+                                </div>
+                                <div class="form-group">
+                                    <label for="update-key-remark">备注 ：</label>
+                                    <input type="text" class="form-control" id="update-key-remark">
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>&nbsp;&nbsp;
-                            <button type="button" class="btn btn-primary">确认</button>
+                            <button type="button" class="btn btn-primary" onclick="updateKey()">确认</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
@@ -253,7 +260,6 @@
 <script src="js/jquery-ui-1.10.3.min.js" type="text/javascript"></script>
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 <script src="js/plugins/daterangepicker/daterangepicker.js" type="text/javascript"></script>
-<script src="js/chart.js" type="text/javascript"></script>
 <script src="js/plugins/iCheck/icheck.min.js" type="text/javascript"></script>
 <script src="js/plugins/fullcalendar/fullcalendar.js" type="text/javascript"></script>
 <script src="js/Director/app.js" type="text/javascript"></script>
@@ -263,6 +269,7 @@
 <script src="js/request.js" type="text/javascript"></script>
 <script src="js/crypto-js.min.js" type="text/javascript"></script>
 <script src="js/plugins/clipboard.min.js" type="text/javascript"></script>
+<script src="js/jquery.ba-resize.min.js" type="text/javascript"></script>
 <script src="js/utils.js" type="text/javascript"></script>
 <script src="js/manage.js" type="text/javascript"></script>
 </body>

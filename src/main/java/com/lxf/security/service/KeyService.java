@@ -1,6 +1,7 @@
 package com.lxf.security.service;
 
 import com.lxf.security.entity.Key;
+import com.lxf.security.entity.LevelStatistic;
 import com.lxf.security.mapper.KeyMapper;
 import com.lxf.security.utils.Common;
 import com.lxf.security.utils.SnowFlake;
@@ -37,9 +38,16 @@ public class KeyService {
         return keyMapper.insert(key) == 1;
     }
 
-    public boolean deleteKey(String keyId){
-        System.out.println(keyMapper.selectByPrimaryKey(keyId));
+    public boolean deleteKey(String keyId) {
         return keyMapper.deleteByPrimaryKey(keyId) == 1;
+    }
+
+    public boolean updateKey(Key key) {
+        return keyMapper.updateByPrimaryKeySelective(key) == 1;
+    }
+
+    public List<LevelStatistic> levelStatistic() {
+        return keyMapper.levelStatistic();
     }
 
 }

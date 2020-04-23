@@ -38,6 +38,26 @@ const checkPassWord = value => {
     return modelList[modes]
 };
 
+// 安全系数
+// @param data:[{"强":5}]
+const safeCoefficient = (data) => {
+    if (data.length === 0) return 0;
+    let coefficientWeight = 0;
+    let keyCount = 0;
+    let coefficientMap = {
+        '极弱': 0.2,
+        '弱': 0.4,
+        '中': 0.6,
+        '强': 0.8,
+        '极强': 1.0,
+    };
+    data.forEach(v => {
+        keyCount += v.count;
+        coefficientWeight += v.count * coefficientMap[v.level];
+    });
+    return parseFloat((coefficientWeight / keyCount).toFixed(2)) * 100
+};
+
 // 生成随机密码
 const genKey = (
     hasNumber,

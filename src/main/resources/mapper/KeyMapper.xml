@@ -1,36 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.lxf.security.mapper.KeyMapper" >
-  <resultMap id="BaseResultMap" type="com.lxf.security.entity.Key" >
-    <id column="ID" property="id" jdbcType="VARCHAR" />
-    <result column="NAME" property="name" jdbcType="VARCHAR" />
-    <result column="IS_VALID" property="isValid" jdbcType="INTEGER" />
-    <result column="LEVEL" property="level" jdbcType="VARCHAR" />
-    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
-    <result column="CREATE_AT" property="createAt" jdbcType="VARCHAR" />
-    <result column="UPDATE_AT" property="updateAt" jdbcType="VARCHAR" />
-    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
-    <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.lxf.security.mapper.KeyMapper">
+    <resultMap id="BaseResultMap" type="com.lxf.security.entity.Key">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="IS_VALID" property="isValid" jdbcType="INTEGER"/>
+        <result column="LEVEL" property="level" jdbcType="VARCHAR"/>
+        <result column="PASSWORD" property="password" jdbcType="VARCHAR"/>
+        <result column="CREATE_AT" property="createAt" jdbcType="VARCHAR"/>
+        <result column="UPDATE_AT" property="updateAt" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="ACCOUNT" property="account" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="LevelStatisticResultMap" type="com.lxf.security.entity.LevelStatistic">
+        <result column="LEVEL" property="level" jdbcType="VARCHAR"/>
+        <result column="COUNT" property="count" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
     ID, NAME, IS_VALID, LEVEL, PASSWORD, CREATE_AT, UPDATE_AT, REMARK, ACCOUNT
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from KEY
-    where ID = #{id,jdbcType=VARCHAR}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List"/>
-    from KEY
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from KEY
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from KEY
+    </select>
+    <select id="levelStatistic" resultMap="LevelStatisticResultMap">
+        SELECT LEVEL,count(LEVEL) AS COUNT FROM KEY
+        GROUP BY LEVEL
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from KEY
     where ID = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.lxf.security.entity.Key" >
+    <insert id="insert" parameterType="com.lxf.security.entity.Key">
     insert into KEY (ID, NAME, IS_VALID, 
       LEVEL, PASSWORD, CREATE_AT, 
       UPDATE_AT, REMARK, ACCOUNT
@@ -40,98 +49,98 @@
       #{updateAt,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.lxf.security.entity.Key" >
-    insert into KEY
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        ID,
-      </if>
-      <if test="name != null" >
-        NAME,
-      </if>
-      <if test="isValid != null" >
-        IS_VALID,
-      </if>
-      <if test="level != null" >
-        LEVEL,
-      </if>
-      <if test="password != null" >
-        PASSWORD,
-      </if>
-      <if test="createAt != null" >
-        CREATE_AT,
-      </if>
-      <if test="updateAt != null" >
-        UPDATE_AT,
-      </if>
-      <if test="remark != null" >
-        REMARK,
-      </if>
-      <if test="account != null" >
-        ACCOUNT,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="isValid != null" >
-        #{isValid,jdbcType=INTEGER},
-      </if>
-      <if test="level != null" >
-        #{level,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="createAt != null" >
-        #{createAt,jdbcType=VARCHAR},
-      </if>
-      <if test="updateAt != null" >
-        #{updateAt,jdbcType=VARCHAR},
-      </if>
-      <if test="remark != null" >
-        #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="account != null" >
-        #{account,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.lxf.security.entity.Key" >
-    update KEY
-    <set >
-      <if test="name != null" >
-        NAME = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="isValid != null" >
-        IS_VALID = #{isValid,jdbcType=INTEGER},
-      </if>
-      <if test="level != null" >
-        LEVEL = #{level,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        PASSWORD = #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="createAt != null" >
-        CREATE_AT = #{createAt,jdbcType=VARCHAR},
-      </if>
-      <if test="updateAt != null" >
-        UPDATE_AT = #{updateAt,jdbcType=VARCHAR},
-      </if>
-      <if test="remark != null" >
-        REMARK = #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="account != null" >
-        ACCOUNT = #{account,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where ID = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.lxf.security.entity.Key" >
+    <insert id="insertSelective" parameterType="com.lxf.security.entity.Key">
+        insert into KEY
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="name != null">
+                NAME,
+            </if>
+            <if test="isValid != null">
+                IS_VALID,
+            </if>
+            <if test="level != null">
+                LEVEL,
+            </if>
+            <if test="password != null">
+                PASSWORD,
+            </if>
+            <if test="createAt != null">
+                CREATE_AT,
+            </if>
+            <if test="updateAt != null">
+                UPDATE_AT,
+            </if>
+            <if test="remark != null">
+                REMARK,
+            </if>
+            <if test="account != null">
+                ACCOUNT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="isValid != null">
+                #{isValid,jdbcType=INTEGER},
+            </if>
+            <if test="level != null">
+                #{level,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="createAt != null">
+                #{createAt,jdbcType=VARCHAR},
+            </if>
+            <if test="updateAt != null">
+                #{updateAt,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.lxf.security.entity.Key">
+        update KEY
+        <set>
+            <if test="name != null">
+                NAME = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="isValid != null">
+                IS_VALID = #{isValid,jdbcType=INTEGER},
+            </if>
+            <if test="level != null">
+                LEVEL = #{level,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                PASSWORD = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="createAt != null">
+                CREATE_AT = #{createAt,jdbcType=VARCHAR},
+            </if>
+            <if test="updateAt != null">
+                UPDATE_AT = #{updateAt,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null">
+                ACCOUNT = #{account,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.lxf.security.entity.Key">
     update KEY
     set NAME = #{name,jdbcType=VARCHAR},
       IS_VALID = #{isValid,jdbcType=INTEGER},

@@ -1,12 +1,10 @@
-let updateThis; //更新按钮指定的this
-
 /* 左侧菜单选择事件 */
 $(".sidebar-menu li").click(function () {
     $(".sidebar-menu li").removeClass("active");
     $(this).addClass("active");
     $("#tables-section").hide();
-    $("#administrate-section").hide();
-    $("#settings-section").hide();
+    $("#manage-section").hide();
+    $("#statistics-section").hide();
 
     $("#" + $(this).attr("data-section")).show();
 });
@@ -56,7 +54,6 @@ const addKey = () => {
 
     let res = addKeyReq(reqConfig);
     res.then(json => {
-        $("#addKeyModal").modal('hide');
         if (json.status === 1) {
             layer.msg('新增成功', {icon: 1, time: 1000});
             showKeysInfo()
@@ -64,9 +61,10 @@ const addKey = () => {
             layer.msg('新增失败', {icon: 2, time: 1000});
         }
     }, json => {
-        $("#addKeyModal").modal('hide');
         console.error(json);
         layer.msg('新增失败', {icon: 2, time: 1000});
+    }).then(() => {
+        $("#addKeyModal").modal('hide');
     })
 };
 
@@ -138,130 +136,123 @@ $(document).on("click", ".view-key", function () {
     });
 });
 
-/* 从信息表中修改信息 */
+/* 修改密码信息 */
 $(document).on("click", ".update-key", function () {
-    // 绑定this对象
-    var that = this;
-    //绑定全局this
-    updateThis = this;
-    // 将需要修改人的信息传给模态框
+    let that = this;
+    // 将需要修改的信息传给模态框
     $("#update-key-id").val($(that).parent().prevAll(".table-key-id").html());
-    $("#update-key-group").val($(that).parent().prevAll(".table-key-group").html());
     $("#update-key-name").val($(that).parent().prevAll(".table-key-name").html());
+    $("#update-key-account").val($(that).parent().prevAll(".table-key-account").html());
+    $("#update-key-password").val($(that).parent().prevAll(".table-key-password").html());
+    $("#update-key-remark").val($(that).parent().prevAll(".table-key-remark").html());
     $("#myModal").modal('show');
 });
 
-/* 确认修改待选人信息 */
-$("#update-key-btn").click(function () {
-    $("#myModal").modal('hide');
-    let updateData = {
-        id: $("#update-key-id").val(),
-        group: $("#update-key-group").val(),
-        name: $("#update-key-name").val()
-    };
-    // 将信息传给后台
-    $.ajax({
-        url: 'MainServlet/updatekey',
-        type: "post",
-        dataType: 'json',
-        data: updateData,
-        success: function (data) {
-            console.log("修改信息成功");
-            // 刷新用户列表,存在bug，后端更新比较慢，请求的是还未更新的内容
-            //所以直接在前端更新，不请求后端数据
-            //  getInformation();
+const updateKey = () => {
+    let id = $("#update-key-id").val();
+    let name = $("#update-key-name").val();
+    let remark = $("#update-key-remark").val();
+    let resp = updateKeyInfoReq(id, name, remark);
 
-            // 前端更新修改后的数据: 姓名和组号
-            $(updateThis).parent().prevAll(".table-key-name").html($("#update-key-name").val());
-            $(updateThis).parent().prevAll(".table-key-group").html($("#update-key-group").val());
-        },
-        error: function () {
-            console.log("修改待选人信息请求发送失败！");
+    resp.then(respJson => {
+        if (respJson.status === 1) {
+            layer.msg('修改成功', {icon: 1, time: 1000});
+            showKeysInfo()
+        } else {
+            layer.msg(respJson.msg, {icon: 2, time: 1000});
         }
+    }).then(() => {
+        $("#myModal").modal('hide');
+    })
+};
+
+const statisticsAll = () => {
+    levelChart.showLoading();
+    safeChart.showLoading();
+    let resp = statisticsReq();
+    resp.then((respJson) => {
+        if (respJson.status === 1) {
+            let chartData = [];
+            respJson.data.forEach(v => {
+                chartData.push({
+                    value: v.count,
+                    name: v.level
+                })
+            });
+            printLevelChart(chartData);
+
+            let coefficient = safeCoefficient(respJson.data);
+            printSafeChart(coefficient);
+        } else {
+            console.error("获取统计数据失败")
+        }
+    }, (respJson) => {
+        console.error(respJson)
     });
-});
+};
 
-/** 显示被抽中次数 */
-function showFrequency() {
-    myChart = echarts.init(document.getElementById('frequencyChart'));
-    myChart.showLoading();
-    // 统计次数
-    var dataX = [];
-    // Y轴的数据
-    var dataY = [];
-    // 统计显示的人数
-    var number = 0;
-
-//向后端请求待选人被抽中次数数据
-    $.ajax({
-        url: 'hello',
-        dataType: 'json',
-        success: function (data) {
-            // 遍历json
-            for (let i in data[0].list) {
-                number++; // 人数加一
-                dataX.push(data[0].list[i].count);
-                dataY.push(data[0].list[i].name);
+const printLevelChart = (data) => {
+    let option = {
+        title: {
+            text: '密码强度',
+            subtext: '分布细则',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        color: ['#4cb4e7', '#ffc90f', '#ffee93', '#e2dbbe', '#a3a380'],
+        series: [
+            {
+                name: '密码强度',
+                type: 'pie',
+                radius: '65%',
+                center: ['50%', '50%'],
+                data: data,
+                label: {
+                    show: false
+                },
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
             }
-            // 调整高度
-            $("#frequencyChart").css('height', number * 60);
-            console.log($("#frequencyChart").css("height"));
-            // 显示图形
-            option = {
-                title: {
-                    text: '待选人抽中次数'
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'shadow'
-                    }
-                },
-                toolbox: {
-                    feature: {
-                        dataView: {show: true, readOnly: false},
-                        restore: {show: true},
-                        saveAsImage: {show: true},
-                        dataZoom: {
-                            yAxisIndex: 'none'
-                        }
-                    }
-                },
-                grid: {
-                    containLabel: true
-                },
-                xAxis: {
-                    name: "次数（次）",
-                    type: 'value',
-                    boundaryGap: [0, 0.01]
-                },
-                yAxis: {
-                    name: "待选人",
-                    type: 'category',
-                    data: dataY
-                },
-                series: [
-                    {
-                        name: '抽中次数',
-                        type: 'bar',
-                        data: dataX,
-                        itemStyle: {
-                            normal: {
-                                color: '#4ad2ff'
-                            }
-                        },
-                    }
-                ]
-            };
-            myChart.hideLoading();
-            myChart.setOption(option);
-        },
-        error: function () {
-            console.log("删除待选人请求发送失败！");
-        }
-    });
-}
+        ]
+    };
+    levelChart.hideLoading();
+    levelChart.setOption(option);
+};
 
+const printSafeChart = (coefficient) => {
+    let option = {
+        title: {
+            text: '安全性分析',
+            left: 'center'
+        },
+        tooltip: {
+            formatter: '{a} <br/>{b} : {c}'
+        },
+        series: [
+            {
+                name: '指标',
+                type: 'gauge',
+                detail: {formatter: '{value}%'},
+                data: [{value: coefficient, name: '安全程度'}],
+                axisLine: {
+                    lineStyle: {
+                        color: [[0.3, '#c23531'], [0.7, '#87CEEB'], [1, '#00C957']]
+                    }
+                }
+            }
+        ]
+    };
+    safeChart.hideLoading();
+    safeChart.setOption(option);
+};
 
 // 点击导出报表按钮，打印报表
 $("#report-btn").click(function () {
@@ -281,33 +272,24 @@ $("#report-btn").click(function () {
     }
 });
 
-// 点击清空次数按钮
-$("#reset-number-btn").click(function () {
-    // 发出ajax请求
-    $.ajax({
-        url: 'MainServlet/clearTime',
-        type: "post",
-        success: function () {
-            // 刷新次数条形图
-            showFrequency();
-            console.log("清空次数成功");
-        },
-        error: function () {
-            console.log("清空次数请求失败");
-        }
-    });
-
-});
-
-
 $(function () {
+    levelChart = echarts.init(document.getElementById('level-statistics'));
+    safeChart = echarts.init(document.getElementById('safe-analysis'));
     showKeysInfo();
-    showFrequency();
+    statisticsAll();
 
     /* 条形图窗口变化时重绘 */
-    let reset = setTimeout(function () {
-        window.onresize = function () {
-            myChart.resize();
-        }
-    }, 200);
+    // let reset = setTimeout(function () {
+    //     window.onresize = function () {
+    //         levelChart.resize();
+    //         safeChart.resize();
+    //     }
+    // }, 200);
+
+    // 切换菜单的时候div被隐藏，重新显示时chart宽度设为为100%无法获取真实宽度，需要重绘一下
+    // 监听div大小变化时重绘
+    $("#statistics-section").resize(function () {
+        levelChart.resize();
+        safeChart.resize();
+    });
 });

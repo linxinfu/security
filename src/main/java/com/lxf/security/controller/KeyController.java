@@ -30,15 +30,30 @@ public class KeyController {
 
     @PostMapping("/add")
     public ServerResponse<Boolean> create(@RequestBody Key key) {
-        System.out.println(key);
         boolean success = keyService.createKey(key);
         return success ? ServerResponse.success("新建成功") : ServerResponse.error("新建失败");
     }
 
     @PostMapping("/delete/{keyId}")
     public ServerResponse<Boolean> delete(@PathVariable String keyId) {
+        if (keyId.isEmpty()) {
+            return ServerResponse.error("参数异常");
+        }
         boolean success = keyService.deleteKey(keyId);
         return success ? ServerResponse.success("删除成功") : ServerResponse.error("删除失败");
     }
 
+    @PostMapping("/update")
+    public ServerResponse<Boolean> update(@RequestBody Key key) {
+        if (key.getId() == null || key.getId().isEmpty()) {
+            return ServerResponse.error("参数异常");
+        }
+        boolean success = keyService.updateKey(key);
+        return success ? ServerResponse.success("更新成功") : ServerResponse.error("更新失败");
+    }
+
+    @GetMapping("/statistics")
+    public ServerResponse<Object> statistics() {
+        return ServerResponse.success("获取成功", keyService.levelStatistic());
+    }
 }

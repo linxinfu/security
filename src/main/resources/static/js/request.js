@@ -37,3 +37,15 @@ const addKeyReq = (config) => {
 const deleteKeyReq = (keyId) => {
     return post(`/api/v1/key/delete/${keyId}`, {})
 };
+
+const updateKeyInfoReq = (id, name, remark) => {
+    return post(`api/v1/key/update`, {
+        id: id,
+        name: name,
+        remark: remark
+    })
+};
+
+const statisticsReq = () => {
+    return get(`/api/v1/key/statistics`)
+};
