@@ -38,7 +38,9 @@
         </javaClientGenerator>
 
         <!-- 指定数据库表 -->
-        <table tableName="key" enableCountByExample="false" enableUpdateByExample="false"
+        <!--        <table tableName="key" enableCountByExample="false" enableUpdateByExample="false"-->
+        <!--               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/>-->
+        <table tableName="user_config" enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"/>
     </context>
 </generatorConfiguration>

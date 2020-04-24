@@ -116,28 +116,65 @@
 
         <!-- Section  manage -->
         <section class="content" id="manage-section" style="display: none;">
+            <!--     设置       -->
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
                     <section class="panel">
                         <header class="panel-heading">
-                            增加密码
+                            <h4>设置</h4>
                         </header>
                         <div class="panel-body">
-                            <form role="form" action="MainServlet/add" method="post" enctype="multipart/form-data">
+                            <form role="form">
                                 <div class="form-group">
-                                    <label for="inputID">ID:</label>
-                                    <input type="text" name="id" class="form-control" id="inputID" placeholder="请输入ID">
+                                    <label for="username-input">名称:</label>
+                                    <input type="text" name="id" class="form-control" id="username-input"
+                                           placeholder="请输入名称">
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputGroupId">组号:</label>
-                                    <input type="text" name="group" class="form-control" id="inputGroupId"
-                                           placeholder="请输入组号">
+                                    <label for="">是否锁屏幕:</label>
+                                    <input type="text" name="group" class="form-control" placeholder="请输入号" id=""/>
+                                </div>
+                                <button class="btn btn-info">提交</button>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!--     设置主密码    -->
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <h4>设置主密码</h4>
+                        </header>
+                        <div class="panel-body">
+                            <form role="form">
+                                <div class="form-group">
+                                    <label for="set-password">主密码:</label>
+                                    <input type="text" name="id" class="form-control" id="set-password"
+                                           placeholder="请输入主密码">
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputUserName">姓名:</label>
-                                    <input type="text" name="name" class="form-control" id="inputUserName"
-                                           placeholder="请输入姓名"/>
+                                    <label for="re-set-password">再次确认:</label>
+                                    <input type="text" name="group" class="form-control" id="re-set-password"
+                                           placeholder="请输入主密码">
                                 </div>
+                                <button class="btn btn-info">提交</button>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!--      证书     -->
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <h4>上传证书</h4>
+                        </header>
+                        <div class="panel-body">
+                            <form role="form" action="" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="inputFile">选择文件</label>
                                     <input type="file" name="file" id="inputFile">

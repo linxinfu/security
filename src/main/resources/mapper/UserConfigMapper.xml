@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lxf.security.mapper.UserConfigMapper">
+    <resultMap id="BaseResultMap" type="com.lxf.security.entity.UserConfig">
+        <id column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="NICKNAME" property="nickname" jdbcType="VARCHAR"/>
+        <result column="PASSWORD_HASH" property="passwordHash" jdbcType="VARCHAR"/>
+        <result column="LOCK_MONITOR" property="lockMonitor" jdbcType="INTEGER"/>
+        <result column="CERTIFICATION_URL" property="certificationUrl" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    NAME, NICKNAME, PASSWORD_HASH, LOCK_MONITOR, CERTIFICATION_URL
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from USER_CONFIG
+        where NAME = #{name,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from USER_CONFIG
+    where NAME = #{name,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.lxf.security.entity.UserConfig">
+    insert into USER_CONFIG (NAME, NICKNAME, PASSWORD_HASH,
+      LOCK_MONITOR, CERTIFICATION_URL)
+    values (#{name,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{passwordHash,jdbcType=VARCHAR}, 
+      #{lockMonitor,jdbcType=INTEGER}, #{certificationUrl,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.lxf.security.entity.UserConfig">
+        insert into USER_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                NAME,
+            </if>
+            <if test="nickName != null">
+                NICKNAME,
+            </if>
+            <if test="passwordHash != null">
+                PASSWORD_HASH,
+            </if>
+            <if test="lockMonitor != null">
+                LOCK_MONITOR,
+            </if>
+            <if test="certificationUrl != null">
+                CERTIFICATION_URL,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="nickName != null">
+                #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="passwordHash != null">
+                #{passwordHash,jdbcType=VARCHAR},
+            </if>
+            <if test="lockMonitor != null">
+                #{lockMonitor,jdbcType=INTEGER},
+            </if>
+            <if test="certificationUrl != null">
+                #{certificationUrl,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.lxf.security.entity.UserConfig">
+        update USER_CONFIG
+        <set>
+            <if test="nickName != null">
+                NICKNAME = #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="passwordHash != null">
+                PASSWORD_HASH = #{passwordHash,jdbcType=VARCHAR},
+            </if>
+            <if test="lockMonitor != null">
+                LOCK_MONITOR = #{lockMonitor,jdbcType=INTEGER},
+            </if>
+            <if test="certificationUrl != null">
+                CERTIFICATION_URL = #{certificationUrl,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where NAME = #{name,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.lxf.security.entity.UserConfig">
+    update USER_CONFIG
+    set NICKNAME = #{nickName,jdbcType=VARCHAR},
+      PASSWORD_HASH = #{passwordHash,jdbcType=VARCHAR},
+      LOCK_MONITOR = #{lockMonitor,jdbcType=INTEGER},
+      CERTIFICATION_URL = #{certificationUrl,jdbcType=VARCHAR}
+    where NAME = #{name,jdbcType=VARCHAR}
+  </update>
+</mapper>
