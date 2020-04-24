@@ -1,5 +1,3 @@
-// const backend_addr = "http://127.0.0.1:8888";
-
 const request = (url, config) => {
     return fetch(url, config).then((res) => {
         if (res.ok) {

@@ -1,5 +1,5 @@
 /* 左侧菜单选择事件 */
-$(".sidebar-menu li").click(function () {
+$(".sidebar-menu li").on('click', function () {
     $(".sidebar-menu li").removeClass("active");
     $(this).addClass("active");
     $("#tables-section").hide();
@@ -43,7 +43,7 @@ const showKeysInfo = () => {
 const addKey = () => {
     let password = $("#add-key-pwd").val();
     let encryptKey = $("#add-key-primary-key").val();
-    let encryptedPwd = AES_ECB_encrypt(password, sha256(encryptKey));
+    let encryptedPwd = AES_ECB_encrypt(password, encryptPassword(encryptKey));
     let reqConfig = {
         name: $("#add-key-name").val(),
         level: checkPassWord(password),
@@ -93,7 +93,7 @@ $(document).on("click", ".view-key", function () {
     let encryptedPwd = $(that).parent().prevAll(".table-key-password").html();
     layer.prompt({title: '输入主密钥', formType: 1}, function (inputKey, index) {
         try {
-            let password = AES_ECB_decrypt(encryptedPwd, sha256(inputKey));
+            let password = AES_ECB_decrypt(encryptedPwd, encryptPassword(inputKey));
             if (password !== "") {
                 layer.close(index);
                 layer.open({
@@ -117,11 +117,11 @@ $(document).on("click", ".view-key", function () {
                                 return password;
                             }
                         });
-                        clipboard.on('success', function (e) {
+                        clipboard.on('success', function () {
                             layer.msg('密码已复制到剪贴板', {icon: 1, time: 1000});
                         });
 
-                        clipboard.on('error', function (e) {
+                        clipboard.on('error', function () {
                             layer.msg(`复制失败`, {icon: 2, time: 1000});
                         });
                     }
@@ -240,6 +240,7 @@ const printSafeChart = (coefficient) => {
             {
                 name: '指标',
                 type: 'gauge',
+                center: ['50%', '55%'],
                 detail: {formatter: '{value}%'},
                 data: [{value: coefficient, name: '安全程度'}],
                 axisLine: {
@@ -254,22 +255,66 @@ const printSafeChart = (coefficient) => {
     safeChart.setOption(option);
 };
 
-// 点击导出报表按钮，打印报表
-$("#report-btn").click(function () {
-    const request = (url, config) => {
-        return fetch(url, config).then((res) => {
-            if (res.ok) {
-                return res.json()
-            } else {
-                // 服务器异常
-                throw Error('')
-            }
-        }).then((resJson) => {
-            return resJson
-        }).catch((error) => {
-            console.log(error)
-        })
+const autoFillPassword = () => {
+    let password = genKey(true, true, true, true, false, 24);
+    let level = checkPassWord(password);
+
+    while (level !== keyLevel.safe.name && level !== keyLevel.verySafe.name) {
+        password = genKey(true, true, true, true, false, 24);
+        level = checkPassWord(password);
     }
+    $("#add-key-pwd").val(password);
+    printPwdProcess(level);
+};
+
+// 模态框关闭的时候清空表单
+$('#addKeyModal').on('hidden.bs.modal', function () {
+    $('#add-key-name').val('');
+    $('#add-key-account').val('');
+    $('#add-key-pwd').val('');
+    $('#add-key-remark').val('');
+    $('#add-key-primary-key').val('');
+    $('#pwdProcess').css('width', "0").html('');
+});
+
+const printPwdProcess = (level) => {
+    let process = '0';
+    let styleClass = '';
+    switch (level) {
+        case keyLevel.veryWeak.name:
+            process = '20%';
+            styleClass = 'progress-bar-danger';
+            break;
+        case keyLevel.weak.name:
+            process = '40%';
+            styleClass = 'progress-bar-danger';
+            break;
+        case keyLevel.middle.name:
+            process = '60%';
+            styleClass = 'progress-bar-warning';
+            break;
+        case keyLevel.safe.name:
+            process = '80%';
+            styleClass = 'progress-bar-info';
+            break;
+        case keyLevel.verySafe.name:
+            process = '100%';
+            styleClass = 'progress-bar-success';
+            break;
+        default:
+            break
+    }
+    $('#pwdProcess').removeClass().addClass('progress-bar').addClass(styleClass).css('width', process).html(level);
+};
+
+$('#add-key-pwd').bind('input propertychange', function () {
+    let password = $('#add-key-pwd').val();
+    if (password.length === 0) {
+        printPwdProcess("");
+        return
+    }
+    let level = checkPassWord(password);
+    printPwdProcess(level)
 });
 
 $(function () {

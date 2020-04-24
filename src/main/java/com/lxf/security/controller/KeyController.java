@@ -3,6 +3,7 @@ package com.lxf.security.controller;
 import com.lxf.security.entity.Key;
 import com.lxf.security.entity.ServerResponse;
 import com.lxf.security.service.KeyService;
+import com.lxf.security.utils.Common;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,6 +49,7 @@ public class KeyController {
         if (key.getId() == null || key.getId().isEmpty()) {
             return ServerResponse.error("参数异常");
         }
+        key.setUpdateAt(Common.getCurrentTimeStr());
         boolean success = keyService.updateKey(key);
         return success ? ServerResponse.success("更新成功") : ServerResponse.error("更新失败");
     }
