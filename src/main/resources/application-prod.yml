@@ -7,10 +7,10 @@ server:
 #    default-property-inclusion: non_null
 
 spring:
-  mvc:
-    view:
-      suffix: .html
-      prefix: /
+  #  mvc:
+  #    view:
+  #      suffix: .html
+  #      prefix: /
 
   datasource:
     # 相对路径

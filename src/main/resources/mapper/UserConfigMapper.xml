@@ -24,7 +24,7 @@
     <insert id="insert" parameterType="com.lxf.security.entity.UserConfig">
     insert into USER_CONFIG (NAME, NICKNAME, PASSWORD_HASH,
       LOCK_MONITOR, CERTIFICATION_URL)
-    values (#{name,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{passwordHash,jdbcType=VARCHAR}, 
+    values (#{name,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, #{passwordHash,jdbcType=VARCHAR},
       #{lockMonitor,jdbcType=INTEGER}, #{certificationUrl,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.lxf.security.entity.UserConfig">
@@ -33,7 +33,7 @@
             <if test="name != null">
                 NAME,
             </if>
-            <if test="nickName != null">
+            <if test="nickname != null">
                 NICKNAME,
             </if>
             <if test="passwordHash != null">
@@ -50,8 +50,8 @@
             <if test="name != null">
                 #{name,jdbcType=VARCHAR},
             </if>
-            <if test="nickName != null">
-                #{nickName,jdbcType=VARCHAR},
+            <if test="nickname != null">
+                #{nickname,jdbcType=VARCHAR},
             </if>
             <if test="passwordHash != null">
                 #{passwordHash,jdbcType=VARCHAR},
@@ -67,8 +67,8 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.lxf.security.entity.UserConfig">
         update USER_CONFIG
         <set>
-            <if test="nickName != null">
-                NICKNAME = #{nickName,jdbcType=VARCHAR},
+            <if test="nickname != null">
+                NICKNAME = #{nickname,jdbcType=VARCHAR},
             </if>
             <if test="passwordHash != null">
                 PASSWORD_HASH = #{passwordHash,jdbcType=VARCHAR},
@@ -84,7 +84,7 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.lxf.security.entity.UserConfig">
     update USER_CONFIG
-    set NICKNAME = #{nickName,jdbcType=VARCHAR},
+    set NICKNAME = #{nickname,jdbcType=VARCHAR},
       PASSWORD_HASH = #{passwordHash,jdbcType=VARCHAR},
       LOCK_MONITOR = #{lockMonitor,jdbcType=INTEGER},
       CERTIFICATION_URL = #{certificationUrl,jdbcType=VARCHAR}

@@ -34,7 +34,7 @@ const showKeysInfo = () => {
                     `);
             });
         } else {
-            console.log("获取密码信息失败")
+            console.error("获取密码信息失败")
         }
     });
 };
@@ -130,7 +130,7 @@ $(document).on("click", ".view-key", function () {
                 throw Error;
             }
         } catch (err) {
-            console.log(err);
+            console.error(err);
             layer.msg(`解密失败，可能主密码有误`, {icon: 2, time: 1000});
         }
     });
@@ -316,6 +316,42 @@ $('#add-key-pwd').bind('input propertychange', function () {
     let level = checkPassWord(password);
     printPwdProcess(level)
 });
+
+const addPrimaryKey = () => {
+    let password = $('#set-password').val();
+    let rePassword = $('#re-set-password').val();
+    if (password !== rePassword) {
+        layer.msg(`两次密码输入不一致`, {icon: 2, time: 1000});
+    }
+    let hashPwd = encryptPassword(password, 50);
+    let req = addPrimaryKeyReq(hashPwd);
+    req.then(respJson => {
+        if (respJson.status === 1) {
+            layer.msg(`设置成功`, {icon: 1, time: 1000});
+        } else {
+            layer.msg(respJson.msg, {icon: 2, time: 1000});
+        }
+    })
+};
+
+const downloadDBFile = () => {
+    layer.prompt({title: '输入主密钥', formType: 1}, function (inputKey, index) {
+        let keyHash = encryptPassword(inputKey, 50);
+        layer.close(index);
+        let rep = downloadDatabaseReq(keyHash);
+        rep.then(v => {
+            if (v !== undefined) {
+                layer.msg("密钥校验错误", {icon: 2, time: 1000});
+            }
+        }, (resJson) => {
+            console.error(resJson)
+        });
+    });
+};
+
+const uploadKeyFile = () => {
+    layer.msg("暂不支持", {icon: 2, time: 1000});
+};
 
 $(function () {
     levelChart = echarts.init(document.getElementById('level-statistics'));

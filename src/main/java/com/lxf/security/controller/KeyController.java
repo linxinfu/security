@@ -1,5 +1,6 @@
 package com.lxf.security.controller;
 
+import com.lxf.security.annotation.CheckPassword;
 import com.lxf.security.entity.Key;
 import com.lxf.security.entity.ServerResponse;
 import com.lxf.security.service.KeyService;

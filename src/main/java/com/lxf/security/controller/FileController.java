@@ -1,6 +1,7 @@
 package com.lxf.security.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.lxf.security.annotation.CheckPassword;
+import com.lxf.security.annotation.CheckPwdLevel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
@@ -23,17 +24,23 @@ public class FileController {
     @Value("${database-file-path}")
     String databasePath;
 
-    @RequestMapping("/database")
-    public String downLoad(HttpServletResponse response) throws IOException {
-        System.out.println(databasePath);
-        String path = ResourceUtils.getURL("classpath:").getPath();
-        System.out.println("第三季爱欧弟就😯" + path);
+    @Value("${spring.profiles.active}")
+    String env;
 
-        File file = new File(databasePath);
+    @RequestMapping("/database")
+    @CheckPassword(CheckPwdLevel.CHECK_PWD)
+    public String downLoad(HttpServletResponse response) throws IOException {
+        String path = databasePath;
+        if ("prod".equals(env)) {
+            String classPath = ResourceUtils.getURL("classpath:").getPath();
+            path = classPath + "db/security.db";
+        }
+
+        File file = new File(path);
         if (file.exists()) {
             response.setCharacterEncoding("UTF-8");
             // response.setContentType("application/force-download");
-            response.setHeader("Content-Disposition", "attachment;fileName=" + java.net.URLEncoder.encode(file.getName(), "UTF-8"));
+            response.setHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(file.getName(), "UTF-8"));
             byte[] buffer = new byte[1024];
             FileInputStream fis = null; // 文件输入流
             BufferedInputStream bis = null;

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserConfigService {
 
+    private final static String DEFAULT_USER = "admin";
+
     private final UserConfigMapper userConfigMapper;
 
     public UserConfigService(UserConfigMapper userConfigMapper) {
@@ -21,6 +23,17 @@ public class UserConfigService {
     }
 
     public UserConfig getConfig() {
-        return userConfigMapper.selectByPrimaryKey("admin");
+        return userConfigMapper.selectByPrimaryKey(DEFAULT_USER);
+    }
+
+    public boolean checkPrimaryKey(String hash) {
+        UserConfig userConfig = userConfigMapper.selectByPrimaryKey(DEFAULT_USER);
+        if (userConfig.getPasswordHash() == null || userConfig.getPasswordHash().isEmpty()) return false;
+
+        return hash.equals(userConfig.getPasswordHash());
+    }
+
+    public boolean update(UserConfig userConfig) {
+        return userConfigMapper.updateByPrimaryKeySelective(userConfig) == 1;
     }
 }
