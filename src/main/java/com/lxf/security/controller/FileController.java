@@ -30,38 +30,46 @@ public class FileController {
     @RequestMapping("/database")
     @CheckPassword(CheckPwdLevel.CHECK_PWD)
     public String downLoad(HttpServletResponse response) throws IOException {
-        String path = databasePath;
-        if ("prod".equals(env)) {
-            String classPath = ResourceUtils.getURL("classpath:").getPath();
-            path = classPath + "db/security.db";
-        }
+        InputStream dbFile = null;
+        switch (env) {
+            case "prod": // 打包成jar包后，目标路径不是一个文件夹内，而是压缩包，需要以流的方式读取
+                dbFile = this.getClass().getResourceAsStream(databasePath);
+                break;
 
-        File file = new File(path);
-        if (file.exists()) {
-            response.setCharacterEncoding("UTF-8");
-            // response.setContentType("application/force-download");
-            response.setHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(file.getName(), "UTF-8"));
-            byte[] buffer = new byte[1024];
-            FileInputStream fis = null; // 文件输入流
-            BufferedInputStream bis = null;
-
-            OutputStream os; // 输出流
-            try {
-                os = response.getOutputStream();
-                fis = new FileInputStream(file);
-                bis = new BufferedInputStream(fis);
-                int i = bis.read(buffer);
-                while (i != -1) {
-                    os.write(buffer);
-                    i = bis.read(buffer);
+            case "dev":
+                File file = new File(databasePath);
+                if (file.exists()) {
+                    dbFile = new FileInputStream(file);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                Objects.requireNonNull(bis).close();
-                Objects.requireNonNull(fis).close();
-            }
+                break;
         }
+        if (dbFile == null) {
+            response.setStatus(202);
+            return "";
+        }
+        response.setCharacterEncoding("UTF-8");
+        // response.setContentType("application/force-download");
+        String filename = databasePath.substring(databasePath.lastIndexOf("/") + 1);
+        response.setHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(filename, "UTF-8"));
+        byte[] buffer = new byte[1024];
+        BufferedInputStream bis = null;
+
+        OutputStream os; // 输出流
+        try {
+            os = response.getOutputStream();
+            bis = new BufferedInputStream(dbFile);
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer);
+                i = bis.read(buffer);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Objects.requireNonNull(bis).close();
+            Objects.requireNonNull(dbFile).close();
+        }
+
         return null;
     }
 }

@@ -322,6 +322,7 @@ const addPrimaryKey = () => {
     let rePassword = $('#re-set-password').val();
     if (password !== rePassword) {
         layer.msg(`两次密码输入不一致`, {icon: 2, time: 1000});
+        return
     }
     let hashPwd = encryptPassword(password, 50);
     let req = addPrimaryKeyReq(hashPwd);
@@ -329,7 +330,7 @@ const addPrimaryKey = () => {
         if (respJson.status === 1) {
             layer.msg(`设置成功`, {icon: 1, time: 1000});
         } else {
-            layer.msg(respJson.msg, {icon: 2, time: 1000});
+            layer.msg(respJson.msg, {icon: 2, time: 3000});
         }
     })
 };
@@ -341,7 +342,7 @@ const downloadDBFile = () => {
         let rep = downloadDatabaseReq(keyHash);
         rep.then(v => {
             if (v !== undefined) {
-                layer.msg("密钥校验错误", {icon: 2, time: 1000});
+                layer.msg("主密码校验错误", {icon: 2, time: 1000});
             }
         }, (resJson) => {
             console.error(resJson)
@@ -358,6 +359,8 @@ $(function () {
     safeChart = echarts.init(document.getElementById('safe-analysis'));
     showKeysInfo();
     statisticsAll();
+
+    layer.msg(`默认主密码：123456`, {icon: 4, time: 4000, offset: 'rt'});
 
     /* 条形图窗口变化时重绘 */
     // let reset = setTimeout(function () {

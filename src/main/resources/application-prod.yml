@@ -27,10 +27,11 @@ mybatis:
     cache-enabled: true
     default-statement-timeout: 3000
     use-generated-keys: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 jwt-salt: HJIhkjKHkjJIHiugUYGyfYfyGuihIJJpoJ0oKPOJL
 
-database-file-path: classpath:db/security.db
+database-file-path: /db/security.db
 
 snow-flake:
   data-center-id: 2

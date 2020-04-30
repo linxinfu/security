@@ -1,4 +1,4 @@
 spring:
   profiles:
-    active: dev
-#    active: prod
+    active: dev  # 开发环境
+#    active: prod  # 生产环境
