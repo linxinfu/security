@@ -1,5 +1,6 @@
 package com.lxf.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,7 +21,7 @@ public class Key {
     private String remark;
     @JsonProperty("create_at")
     private String createAt;
-    @JsonProperty("update_at")
+    @JsonIgnore
     private String updateAt;
 
     public String getId() {
@@ -39,6 +40,7 @@ public class Key {
         this.name = name;
     }
 
+    @JsonIgnore
     public Boolean getValid() {
         return isValid;
     }

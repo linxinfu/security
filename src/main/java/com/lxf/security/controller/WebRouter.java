@@ -17,7 +17,7 @@ public class WebRouter {
         return "manage";
     }
 
-    @RequestMapping("/test")
+    @RequestMapping("/test1")
     public String test() {
         return "test";
     }

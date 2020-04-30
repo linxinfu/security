@@ -350,6 +350,35 @@ const downloadDBFile = () => {
     });
 };
 
+const saveKeyToFile = () => {
+    layer.prompt({title: '输入主密钥', formType: 1}, function (inputKey, index) {
+        let keyHash = encryptPassword(inputKey, 50);
+        layer.close(index);
+        let rep = checkPrimaryKey(keyHash);
+        rep.then(respJson => {
+            if (respJson.status !== 1) {
+                layer.msg("主密码校验错误", {icon: 2, time: 1000});
+                throw Error
+            }
+        }).then(() => {
+            let keyResp = getAllKeysReq();
+            keyResp.then(keyJson => {
+                if (keyJson.status === 1) {
+                    if (keyJson.data.length === 0) {
+                        layer.msg("目前没有密钥", {icon: 1, time: 1000});
+                        return
+                    }
+                    for (let i = 0; i < keyJson.data.length; i++) {
+                        keyJson.data[i].password = AES_ECB_decrypt(keyJson.data[i].password, encryptPassword(inputKey))
+                    }
+
+                    tableToExcel(keyJson.data, "密码");
+                }
+            })
+        });
+    });
+};
+
 const uploadKeyFile = () => {
     layer.msg("暂不支持", {icon: 2, time: 1000});
 };

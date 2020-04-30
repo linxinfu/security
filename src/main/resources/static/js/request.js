@@ -81,3 +81,7 @@ const addPrimaryKeyReq = (keyHash) => {
 const downloadDatabaseReq = (hash) => {
     return downloadFetch(`/api/v1/file/database?hash=${hash}`)
 };
+
+const checkPrimaryKey = (hash) => {
+    return get(`/api/v1/config/check_key?hash=${hash}`)
+};

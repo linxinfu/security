@@ -30,13 +30,15 @@
         select
         <include refid="Base_Column_List"/>
         from KEY
+        where IS_VALID = 1
     </select>
     <select id="levelStatistic" resultMap="LevelStatisticResultMap">
         SELECT LEVEL,count(LEVEL) AS COUNT FROM KEY
         GROUP BY LEVEL
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from KEY
+    update KEY
+    set IS_VALID = 0
     where ID = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.lxf.security.entity.Key">

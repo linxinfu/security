@@ -21,29 +21,16 @@
 </head>
 <body class="skin-black">
 <div class="form-group floating-label">
-    <label >是否开启RMB购买</label>
+    <label>是否开启RMB购买</label>
 </div>
-<div >
-    <label class="checkbox-inline">
-        <input type="radio" name="is_buy"  value="1" > 开启
-    </label>
-    <label class="checkbox-inline">
-        <input type="radio" name="is_buy"  value="0"> 关闭
-    </label>
-
-</div>
-
-
-<div class="form-group floating-label">
-    <label >可购买人群</label>
-</div>
-
 <div>
-    <foreach name="vip" item="vo" >
-        <label class="checkbox-inline">
-            <input type="checkbox" style='transform: scale(1.6,1.6)' name='vip[]' value="{$key}"> {$vo}
-        </label>
-    </foreach>
+    <label class="checkbox-inline">
+        <input type="radio" name="is_buy" value="1"> 开启
+    </label>
+    <label class="checkbox-inline">
+        <input type="radio" name="is_buy" value="0"> 关闭
+    </label>
+
 </div>
 <!-- jQuery 2.0.2 -->
 <script src="js/plugins/jquery.min.js" type="text/javascript"></script>
@@ -53,6 +40,8 @@
 <script src="js/plugins/echarts.min.js" type="text/javascript"></script>
 <script src="js/plugins/marked.js" type="text/javascript"></script>
 <script>
+
+
     // $(function () {
     //     document.getElementById('chart').innerHTML =
     //         marked("");

@@ -125,3 +125,48 @@ const genKey = (
 
     return password
 };
+
+const tableToExcel = (excelData, filename) => {
+    if (excelData.length === 0) return;
+    //列标题
+    let str = '<tr>';
+    for (let item in excelData[0]) {
+        str += `<td>${item}</td>td>`
+    }
+    str += '</tr>';
+
+    // let str = '<tr><td>ID</td><td>名称</td><td>账号</td><td>密码</td><td>强度</td><td>备注</td><td>创建时间</td></tr>';
+    //循环遍历，每行加入tr标签，每个单元格加td标签
+    for (let i = 0; i < excelData.length; i++) {
+        str += '<tr>';
+        for (let item in excelData[i]) {
+            //增加\t为了不让表格显示科学计数法或者其他格式
+            str += `<td>${excelData[i][item] + '\t'}</td>`;
+        }
+        str += '</tr>';
+    }
+    //Worksheet名
+    let worksheet = filename;
+    let uri = 'data:application/vnd.ms-excel;base64,';
+
+    //下载的表格模板数据
+    let template = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel"
+      xmlns="http://www.w3.org/TR/REC-html40">
+      <head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
+        <x:Name>${worksheet}</x:Name>
+        <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>
+        </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+        </head><body><table>${str}</table></body></html>`;
+    //下载
+    let link = document.createElement("a");
+    link.href = uri + base64(template);
+    link.download = `${filename}.xls`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
+
+const base64 = (s) => {
+    return window.btoa(unescape(encodeURIComponent(s)))
+};

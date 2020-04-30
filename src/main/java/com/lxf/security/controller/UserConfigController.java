@@ -4,11 +4,7 @@ import com.lxf.security.entity.ServerResponse;
 import com.lxf.security.entity.UserConfig;
 import com.lxf.security.service.KeyService;
 import com.lxf.security.service.UserConfigService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by lxf.
@@ -43,5 +39,14 @@ public class UserConfigController {
         param.setName("admin");
         boolean success = userConfigService.update(param);
         return success ? ServerResponse.success("新增成功") : ServerResponse.error("新增失败");
+    }
+
+    @RequestMapping("/check_key")
+    public ServerResponse<Boolean> checkPrimaryKey(@RequestParam(value = "hash", defaultValue = "") String hash) {
+        if (hash.isEmpty()) {
+            return ServerResponse.error("校验失败");
+        }
+        boolean success = userConfigService.checkPrimaryKey(hash);
+        return success ? ServerResponse.success("校验成功") : ServerResponse.error("校验失败");
     }
 }
